@@ -8,7 +8,13 @@ static const unsigned int gappx     = 7;        /* gaps between windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=10" };
+static const char *fonts[]            = {
+	"Noto Mono:size=10",
+    "Font Awesome 5 Free:size=10:style=Solid",
+    "Noto Fonts Emoji:size=10:antialias=true:autohint=true",
+    "JoyPixels:pixelsize=10:antialias=true:autohint=true",
+	"monospace:size=10"
+	};
 static const char dmenufont[]       = "monospace:size=10";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
@@ -25,14 +31,14 @@ static const unsigned int borderalpha = OPAQUE;
 };
 
 /* Orange and Black */
-static const char *colors_OB[][3]      = {
+static const char *colors[][3]      = {
 	[SchemeNorm] = { "#fe8019", "#32302f", col_gray2 },
 	[SchemeSel]  = { "#32302f", "#fe8019",  col_cyan  },
 };
 
 
 /* White and Orange */
-static const char *colors[][3]      = {
+static const char *colors_WO[][3]      = {
 	[SchemeNorm] = { "#ebdbb2", "#fe8019", col_gray2 },
 	[SchemeSel]  = { "#fe8019", "#ebdbb2",  col_cyan  },
 };
