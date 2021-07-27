@@ -3,18 +3,15 @@
 #include <X11/XF86keysym.h>
 
 /* appearance */
-static const unsigned int borderpx  = 5;        /* border pixel of windows */
-static const unsigned int gappx     = 7;        /* gaps between windows */
+static const unsigned int borderpx  = 1;        /* border pixel of windows */
+static const unsigned int gappx     = 5;        /* gaps between windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]            = {
-	"Noto Mono:size=10",
-    "Font Awesome 5 Free:size=10:style=Solid",
-    "Noto Fonts Emoji:size=10:antialias=true:autohint=true",
-    "JoyPixels:pixelsize=10:antialias=true:autohint=true",
-	"monospace:size=10"
-	};
+static const char *fonts[]          = { 
+	"Font Awesome 5:size=10",
+	"monospace:size=10",
+ };
 static const char dmenufont[]       = "monospace:size=10";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
@@ -34,6 +31,7 @@ static const unsigned int borderalpha = OPAQUE;
 static const char *colors[][3]      = {
 	[SchemeNorm] = { "#fe8019", "#32302f", col_gray2 },
 	[SchemeSel]  = { "#32302f", "#fe8019",  col_cyan  },
+    [SchemeTest] =	 { "#689d6a", "#689d6a", col_gray3 },
 };
 
 
