@@ -1,49 +1,46 @@
 /* See LICENSE file for copyright and license details. */
-
 #include <X11/XF86keysym.h>
 
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
-static const unsigned int gappx     = 5;        /* gaps between windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=10" };
-static const char dmenufont[]       = "monospace:size=10";
-static const char col_gray1[]       = "#222222";
-static const char col_gray2[]       = "#444444";
-static const char col_gray3[]       = "#bbbbbb";
-static const char col_gray4[]       = "#eeeeee";
-static const char col_cyan[]        = "#1d2021";
-static const unsigned int baralpha = 0xd0;
-static const unsigned int borderalpha = OPAQUE;
+static const int focusonwheel       = 0;
+static const int horizpadbar        = 0;        /* horizontal padding for statusbar */
+static const int vertpadbar         = 7;        /* vertical padding for statusbar */
+static const char *fonts[]          = {"JetBrainsMono Nerd Font:size15"};
+static const char dmenufont[]       = "JetBrainsMono Nerd Font:size=12";
+static const char col_gray1[]       = "#282a36";
+static const char col_gray2[]       = "#282a36";
+static const char col_gray3[]       = "#96b5b4";
+static const char col_gray4[]       = "#d7d7d7";
+static const char col_cyan[]        = "#282a36";
+static const char col_black[]       = "#000000";
+static const char col_white[]       = "#ffffff";
+static const char col_red[]         = "#eb3449";
+static const char col_yellow[]      = "#ffee75";
+static const char col_green[]       = "#a3be8c";
+static const char col_orange[]      = "#d08770";
+static const char col_purple[]      = "#b48ead";
+static const char col_pink[]        = "#ffafbc";
+static const char col_blue[]        = "#88c0d0";
 
-/* Green and Black */
- static const char *colors_GB[][3]      = {
-	[SchemeNorm] = { "#32302f", "#b8bb26", col_gray2 },
-	[SchemeSel]  = { "#b8bb26", "#32302f",  col_cyan  },
-};
-
-/* Orange and Black */
 static const char *colors[][3]      = {
-	[SchemeNorm] = { "#fe8019", "#32302f", col_gray2 },
-	[SchemeSel]  = { "#32302f", "#fe8019",  col_cyan  },
+	/*					fg         bg          border   */
+    [SchemeNorm]   = { col_gray3,  col_gray1,  col_gray2 },
+    [SchemeSel]    = { col_gray4,  col_cyan,   col_cyan  },
+    [SchemeRed]    = { col_red,    col_gray1,  col_gray2 },
+    [SchemeYellow] = { col_yellow, col_gray1,  col_gray2 },
+    [SchemeOrange] = { col_orange, col_gray1,  col_gray2 },
+    [SchemeGreen]  = { col_green,  col_gray1,  col_gray2 },
+    [SchemePurple] = { col_purple, col_gray1,  col_gray2 },
+    [SchemePink]   = { col_pink,   col_gray1,  col_gray2 },
+    [Schemeblue]   = { col_blue,   col_gray1,  col_gray2 }
 };
 
-
-/* White and Orange */
-static const char *colors_WO[][3]      = {
-	[SchemeNorm] = { "#ebdbb2", "#fe8019", col_gray2 },
-	[SchemeSel]  = { "#fe8019", "#ebdbb2",  col_cyan  },
-};
-
-
-
-static const unsigned int alphas[][3]      = {
-	/*               fg      bg        border     */
-	[SchemeNorm] = { OPAQUE, baralpha, borderalpha },
-	[SchemeSel]  = { OPAQUE, baralpha, borderalpha },
-};
+/* staticstatus */
+static const int statmonval = 0;
 
 /* tagging */
 static const char *tags[] = { "I", "II", "III", "IV", "V"};
@@ -53,9 +50,10 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	/* class      instance    title       tags mask     isfloating    centerThisWindow?   monitor */
+	{ "discord",  NULL,       NULL,       1 << 4,       0,            0,                  0 },
+	{ "Spotify",  NULL,       NULL,       1 << 5,       0,            0,                  0 },
+	{ "TelegramDesktop",NULL, NULL,       1 << 6,       0,            0,                  0 },
 };
 
 /* layout(s) */
@@ -65,8 +63,8 @@ static const int resizehints = 1;    /* 1 means respect size hints in tiled resi
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ ":)",      tile },    /* first entry is default */
-	{ "O.o",      NULL },    /* no layout function means floating behavior */
+	{ "[]=",      tile },    /* first entry is default */
+	{ "><>",      NULL },    /* no layout function means floating behavior */
 	{ "[M]",      monocle },
 };
 
@@ -84,17 +82,29 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "alacritty", NULL };
-static const char *upvol[]   = { "/usr/bin/pactl", "set-sink-volume", "0", "+5%",     NULL };
-static const char *downvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "-5%",     NULL };
-static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "toggle",  NULL };
+static const char *termcmd[]  = { "st", NULL };
+static const char *web[] = {"brave", NULL};
+
+static const char *mute[] = {"pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle", NULL };
+static const char *volup[] = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+5%", NULL };
+static const char *voldown[] = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "-5%", NULL };
+
+static const char *play_pause_spotify[] = { "playerctl", "play-pause", "-p", "spotify", NULL};
+static const char *next_spotify[] = { "playerctl", "next","-p", "spotify", NULL};
+static const char *previous_spotify[] = { "playerctl", "previous","-p", "spotify", NULL};
+
+static const char *play_pause[] = { "playerctl", "play-pause", "-i", "spotify", NULL};
+static const char *next[] = { "playerctl", "next","-i", "spotify", NULL};
+static const char *previous[] = { "playerctl", "previous","-i", "spotify", NULL};
+
+static const char *kitty[] = {"kitty", NULL};
+static const char *audio[] = {"/home/anurag/.program/audio.sh", NULL};
+static const char *code[] = {"code", NULL};
+
+const char screensot_script[] = "var=~/Pictures/$(date '+%d-%m-%y-%H_%M_%S').png; maim -s -u -m 10 $var; cat $var | xclip -selection clipboard -t image/png;";
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-	/*-----------------------MEDIA-KEYS---------------------------------*/
-	{ 0,                       XF86XK_AudioLowerVolume, spawn, {.v = downvol } },
-	{ 0,                       XF86XK_AudioMute, spawn, {.v = mutevol } },
-	{ 0,                       XF86XK_AudioRaiseVolume, spawn, {.v = upvol   } },
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
@@ -106,11 +116,10 @@ static Key keys[] = {
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
-	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
+	{ MODKEY,                       XK_x,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
-	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
@@ -118,9 +127,6 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
-	{ MODKEY,                       XK_minus,  setgaps,        {.i = -1 } },
-	{ MODKEY,                       XK_equal,  setgaps,        {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_equal,  setgaps,        {.i = 0  } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -131,6 +137,20 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+	{ 0,        XF86XK_AudioMute,              spawn,          {.v = mute } },
+	{ 0,        XF86XK_AudioLowerVolume,       spawn,          {.v = voldown } },
+	{ 0,        XF86XK_AudioRaiseVolume,       spawn,          {.v = volup } },
+	{ 0,        XF86XK_AudioPlay,              spawn,          {.v = play_pause_spotify } },
+	{ 0,        XF86XK_AudioPrev,              spawn,          {.v = previous_spotify } },
+	{ 0,        XF86XK_AudioNext,              spawn,          {.v = next_spotify } },
+	{ ShiftMask,    XF86XK_AudioPlay,          spawn,          {.v = play_pause } },
+	{ ShiftMask,    XF86XK_AudioPrev,          spawn,          {.v = previous } },
+	{ ShiftMask,    XF86XK_AudioNext,          spawn,          {.v = next } },
+	{ MODKEY,       XK_space,                  spawn,          {.v = kitty} }, 
+	{ 0,            XK_Print,                  spawn,          SHCMD(screensot_script)},
+	{ 0,            XK_F8,                     spawn,          {.v = audio} },
+    { MODKEY,                       XK_w,      spawn,          {.v = web }},
+	{ MODKEY,                       XK_c,      spawn,          {.v = code}}, 
 };
 
 /* button definitions */
@@ -139,7 +159,6 @@ static Button buttons[] = {
 	/* click                event mask      button          function        argument */
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
-	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
 	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
