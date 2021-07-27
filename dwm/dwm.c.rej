@@ -1,0 +1,23 @@
+--- dwm.c
++++ dwm.c
+@@ -425,8 +429,7 @@ buttonpress(XEvent *e)
+ 
+ 	click = ClkRootWin;
+ 	/* focus monitor if necessary */
+-	if ((m = wintomon(ev->window)) && m != selmon
+-	    && (focusonwheel || (ev->button != Button4 && ev->button != Button5))) {
++	if ((m = wintomon(ev->window)) && m != selmon) {
+ 		unfocus(selmon->sel, 1);
+ 		selmon = m;
+ 		focus(NULL);
+@@ -446,8 +449,8 @@ buttonpress(XEvent *e)
+ 		else
+ 			click = ClkWinTitle;
+ 	} else if ((c = wintoclient(ev->window))) {
+-		if (focusonwheel || (ev->button != Button4 && ev->button != Button5))
+-			focus(c);
++		focus(c);
++		restack(selmon);
+ 		XAllowEvents(dpy, ReplayPointer, CurrentTime);
+ 		click = ClkClientWin;
+ 	}
