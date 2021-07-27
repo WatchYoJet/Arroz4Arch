@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <X11/cursorfont.h>
@@ -59,7 +60,7 @@
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
-enum { SchemeNorm, SchemeSel, SchemeRed, SchemeYellow, SchemeOrange, SchemeGreen, SchemePurple, SchemePink, Schemeblue}; /* color schemes */
+enum { SchemeNorm, SchemeSel, SchemeRed, SchemeYellow, SchemeOrange, SchemeGreen, SchemePurple, SchemePink, Schemeblue, SchemeNightNorm, SchemeNightSel}; /* color schemes */
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
        NetWMFullscreen, NetActiveWindow, NetWMWindowType,
        NetWMWindowTypeDialog, NetClientList, NetLast }; /* EWMH atoms */
@@ -147,6 +148,7 @@ typedef struct {
 } Rule;
 
 /* function declarations */
+static void schemecycle(Drw *drw, Clr *scm, int isNorm);
 static void applyrules(Client *c);
 static int applysizehints(Client *c, int *x, int *y, int *w, int *h, int interact);
 static void arrange(Monitor *m);
@@ -288,7 +290,43 @@ struct Pertag {
 /* compile-time check if all tags fit into an unsigned int bit array. */
 struct NumTags { char limitexceeded[LENGTH(tags) > 31 ? -1 : 1]; };
 
+int
+getdate(void){
+	time_t rawtime;
+    struct tm * timeinfo;
+    int i = 0;
+    time( &rawtime );
+    timeinfo = localtime( &rawtime );
+    char *token = strtok(asctime(timeinfo), " ");
+    while (token != NULL)
+    {
+        if (i == 3)
+		{
+            char *token2 = strtok(token, ":"); 
+            return atoi(token2);
+        }
+        token = strtok(NULL, " ");
+        i += 1;
+    }
+	return 0;
+}
+
 /* function implementations */
+void
+schemecycle(Drw *drw, Clr *scm, int isNorm)
+{
+	if (getdate() <= 19)
+	{
+		if (isNorm) drw_setscheme(drw, scm);
+		else drw_setscheme(drw, scm);
+	}
+	else
+	{
+		if (isNorm) drw_setscheme(drw, scheme[SchemeNightNorm]);
+		else drw_setscheme(drw, scheme[SchemeNightSel]);
+	}
+}
+
 void
 applyrules(Client *c)
 {
@@ -751,7 +789,7 @@ drawbar(Monitor *m)
 
 	/* draw status first so it can be overdrawn by tags later */
 	if (m == statmon) { /* status is only drawn on user-defined status monitor */
-		drw_setscheme(drw, scheme[SchemeNorm]);
+		schemecycle(drw, scheme[SchemeNorm], 1);
 		tw = TEXTW(stext) - lrpad + 2 - correct; /* 2px right padding and correction for escape sequences*/
 		while (1) {
 			if ( (unsigned int) *ts > LENGTH(colors) ) { 
@@ -778,7 +816,14 @@ drawbar(Monitor *m)
 	x = 0;
 	for (i = 0; i < LENGTH(tags); i++) {
 		w = TEXTW(tags[i]);
-		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeSel : SchemeNorm]);
+		if (m->tagset[m->seltags] & 1 << i)
+		{
+			schemecycle(drw, scheme[SchemeSel], 0);
+		}
+		else 
+		{
+			schemecycle(drw, scheme[SchemeNorm], 1);
+		}
 		drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
 		if (occ & 1 << i)
 			drw_rect(drw, x + boxs, boxs, boxw, boxw,
@@ -787,11 +832,11 @@ drawbar(Monitor *m)
 		x += w;
 	}
 	w = blw = TEXTW(m->ltsymbol);
-	drw_setscheme(drw, scheme[SchemeNorm]);
+	schemecycle(drw, scheme[SchemeNorm], 1);
 	x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
 
 	if ((w = m->ww - tw - x) > bh) {
-		drw_setscheme(drw, scheme[SchemeNorm]);
+		schemecycle(drw, scheme[SchemeNorm], 1);
 		drw_rect(drw, x, 0, w, bh, 1, 1);
 	}
 	drw_map(drw, m->barwin, 0, 0, m->ww, bh);

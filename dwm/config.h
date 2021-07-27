@@ -3,7 +3,7 @@
 
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
-static const unsigned int gappx		= 5;
+static const unsigned int gappx		= 30;
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
@@ -46,7 +46,11 @@ static const char *colors[][3]      = {
     [SchemeGreen]  = { col_green,  		 col_gray5,  	   col_gray2 },
     [SchemePurple] = { col_purple, 		 col_gray5,  	   col_gray2 },
     [SchemePink]   = { col_pink,   		 col_gray5,  	   col_gray2 },
-    [Schemeblue]   = { col_blue,   		 col_gray5,  	   col_gray2 }
+    [Schemeblue]   = { col_blue,   		 col_gray5,  	   col_gray2 },
+
+	/* Time Schemes */
+	[SchemeNightNorm]  = { "#458588", "#32302f",  col_cyan  },
+	[SchemeNightSel] =   { "#32302f", "#458588", col_gray2 },
 };
 
 static const int statmonval = 0;
