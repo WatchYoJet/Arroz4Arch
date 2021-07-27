@@ -10,7 +10,13 @@ static const int topbar             = 1;        /* 0 means bottom bar */
 static const int focusonwheel       = 1;
 static const int horizpadbar        = 0;        /* horizontal padding for statusbar */
 static const int vertpadbar         = 5;        /* vertical padding for statusbar */
-static const char *fonts[]          = {"JetBrainsMono Nerd Font:size=11"};
+static const char *fonts[]            = {
+    "Noto Mono:size=11",
+    "Font Awesome 5 Free:size=12:style=Solid",
+    "Noto Fonts Emoji:size=10:antialias=true:autohint=true",
+    "JoyPixels:pixelsize=10:antialias=true:autohint=true",
+    "monospace:size=10"
+    };
 static const char dmenufont[]       = "JetBrainsMono Nerd Font:size=12";
 static const char col_gray1[]       = "#282a36";
 static const char col_gray2[]       = "#282a36";
@@ -83,11 +89,19 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "alacritty", NULL };
+static const char *upvol[]   = { "/usr/bin/pactl", "set-sink-volume", "0", "+5%",     NULL };
+static const char *downvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "-5%",     NULL };
+static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "toggle",  NULL };
+static const char *screenshotcmd[] = { "flameshot", "gui", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
+	{ 0,							XK_Print,  spawn,          {.v = screenshotcmd } },
+	{ 0,                       		XF86XK_AudioLowerVolume,   spawn, {.v = downvol } },
+	{ 0,                       		XF86XK_AudioMute, spawn,   {.v = mutevol } },
+	{ 0,                       		XF86XK_AudioRaiseVolume,   spawn, {.v = upvol   } },
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,             XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,             			XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -120,7 +134,6 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} }, 
 };
 
-/* button definitions */
 /* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
 static Button buttons[] = {
 	/* click                event mask      button          function        argument */
