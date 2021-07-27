@@ -1,13 +1,11 @@
 #! /bin/sh
 
-icon="" 
-
 #status=$(~/.local/bin/status-bar/spotify_status.py -f '{artist} - {song}')
 status=$(playerctl metadata --format '{{artist}} - {{title}}' | cut -c 1-50)
 runstate=$(playerctl status)
 
 if [[ $runstate == "Playing" ]]; then 
-    echo -e "\x03  \x01 $status "
+    echo -e "\x06  \x01 $status "
 else
     echo ""
 fi
