@@ -60,7 +60,21 @@
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
-enum { SchemeNorm, SchemeSel, SchemeRed, SchemeYellow, SchemeOrange, SchemeGreen, SchemePurple, SchemePink, Schemeblue, SchemeNightNorm, SchemeNightSel}; /* color schemes */
+enum { /* color schemes */
+	SchemeNorm,
+	SchemeSel, 
+	SchemeRed, 
+	SchemeYellow, 
+	SchemeOrange, 
+	SchemeGreen, 
+	SchemePurple, 
+	SchemePink, 
+	Schemeblue, 
+	SchemeNightNorm, 
+	SchemeNightSel, 
+	SchemeMornNorm, 
+	SchemeMornSel
+};
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
        NetWMFullscreen, NetActiveWindow, NetWMWindowType,
        NetWMWindowTypeDialog, NetClientList, NetLast }; /* EWMH atoms */
@@ -318,20 +332,31 @@ gettime(void){
 void
 schemecycle(Drw *drw, Clr *scm, int isNorm)
 {
-	if (gettime() >= 7 && gettime() < 16)
+	if (gettime() >= 7 && gettime() < 14)
 	{
 		if (bgFlag == 0 || firstRun == 1)
 		{
-			system("nitrogen --set-zoom-fill ./Downloads/morning.jpg");
+			system("nitrogen --set-zoom-fill ./Downloads/morning.png");
 			bgFlag = 1;
+			firstRun = 0;
+		}
+		if (isNorm) drw_setscheme(drw, scheme[SchemeMornNorm]);
+		else drw_setscheme(drw, scheme[SchemeMornSel]);
+	}
+	else if (gettime() >= 14 || gettime() < 19)
+	{
+		if (bgFlag == 1 || firstRun == 1)
+		{
+			system("nitrogen --set-zoom-fill ./Downloads/sunset.jpg");
+			bgFlag = 2;
 			firstRun = 0;
 		}
 		if (isNorm) drw_setscheme(drw, scm);
 		else drw_setscheme(drw, scm);
 	}
-	else if (gettime() >= 16 || gettime() <= 7)
+	else if (gettime() >= 19 || gettime() < 7)
 	{
-		if (bgFlag == 1 || firstRun == 1)
+		if (bgFlag == 2 || firstRun == 1)
 		{
 			system("nitrogen --set-zoom-fill ./Downloads/night.png");
 			bgFlag = 0;

@@ -7,8 +7,11 @@ Still working on it...
 
 # Looking Like This
 
-Before 7pm
-![Nice](./Pics/desktop-morning.png)
+After 7am
+![POG](./Pics/desktop-morning.png)
+
+Before 2pm
+![Nice](./Pics/desktop-sunset.png)
 
 
 After 7pm

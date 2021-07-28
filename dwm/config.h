@@ -38,19 +38,20 @@ static const char col_gruv_orange[] = "#fe8019";
 
 static const char *colors[][3]      = {
 	/*					fg         bg          border   */
-    [SchemeNorm]   = { col_gruv_orange,  col_gray5,        col_gray2 },
-    [SchemeSel]    = { col_gray5,  		 col_gruv_orange,  col_cyan  },
-    [SchemeRed]    = { col_red,    		 col_gray5,		   col_gray2 },
-    [SchemeYellow] = { col_yellow, 		 col_gray5,  	   col_gray2 },
-    [SchemeOrange] = { col_orange, 		 col_gray5,  	   col_gray2 },
-    [SchemeGreen]  = { col_green,  		 col_gray5,  	   col_gray2 },
-    [SchemePurple] = { col_purple, 		 col_gray5,  	   col_gray2 },
-    [SchemePink]   = { col_pink,   		 col_gray5,  	   col_gray2 },
-    [Schemeblue]   = { col_blue,   		 col_gray5,  	   col_gray2 },
-
+    [SchemeNorm]   		= { col_gruv_orange,  	 col_gray5,        col_gray2 },
+    [SchemeSel]    		= { col_gray5,  		 col_gruv_orange,  col_cyan  },
+    [SchemeRed]    		= { col_red,    		 col_gray5,		   col_gray2 },
+    [SchemeYellow] 		= { col_yellow, 		 col_gray5,  	   col_gray2 },
+    [SchemeOrange] 		= { col_orange, 		 col_gray5,  	   col_gray2 },
+    [SchemeGreen]  		= { col_green,  		 col_gray5,  	   col_gray2 },
+    [SchemePurple] 		= { col_purple, 		 col_gray5,  	   col_gray2 },
+    [SchemePink]   		= { col_pink,   		 col_gray5,  	   col_gray2 },
+    [Schemeblue]   		= { col_blue,   		 col_gray5,  	   col_gray2 },
 	/* Time Schemes */
-	[SchemeNightNorm]  = { "#458588", "#32302f",  col_cyan  },
-	[SchemeNightSel] =   { "#32302f", "#458588", col_gray2 },
+	[SchemeNightNorm]  	=   { "#458588", "#32302f",  col_cyan  },
+	[SchemeNightSel] 	=   { "#32302f", "#458588",  col_gray2 },
+	[SchemeMornNorm] 	=	{ "#ebdbb2", col_gray5,  col_gray2 },
+	[SchemeMornSel]		=   { col_gray5, "#ebdbb2",  col_cyan  },
 };
 
 static const int statmonval = 0;
