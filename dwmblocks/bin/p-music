@@ -5,7 +5,7 @@ status=$(playerctl metadata --format '{{artist}} - {{title}}' | cut -c 1-50)
 runstate=$(playerctl status)
 
 if [[ $runstate == "Playing" ]]; then 
-    echo -e "\x06  \x01 $status "
+    echo -e "\x06  \x08 $status \x01"
 else
     echo ""
 fi

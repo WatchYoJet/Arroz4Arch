@@ -8,8 +8,8 @@ Still working on it...
 # Looking Like This
 
 Before 7pm
-![Nice](desktop.png)
+![Nice](./Pics/desktop-morning.png)
 
 
 After 7pm
-![Epic](desktop-night.png)
+![Epic](./Pics/desktop-night.png)

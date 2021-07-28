@@ -241,6 +241,9 @@ static int xerror(Display *dpy, XErrorEvent *ee);
 static int xerrordummy(Display *dpy, XErrorEvent *ee);
 static int xerrorstart(Display *dpy, XErrorEvent *ee);
 static void zoom(const Arg *arg);
+static int gettime(void);
+int bgFlag = 0;
+int firstRun = 1;
 
 /* variables */
 static const char broken[] = "broken";
@@ -291,7 +294,7 @@ struct Pertag {
 struct NumTags { char limitexceeded[LENGTH(tags) > 31 ? -1 : 1]; };
 
 int
-getdate(void){
+gettime(void){
 	time_t rawtime;
     struct tm * timeinfo;
     int i = 0;
@@ -315,13 +318,25 @@ getdate(void){
 void
 schemecycle(Drw *drw, Clr *scm, int isNorm)
 {
-	if (getdate() <= 19)
+	if (gettime() >= 7 && gettime() < 16)
 	{
+		if (bgFlag == 0 || firstRun == 1)
+		{
+			system("nitrogen --set-zoom-fill ./Downloads/morning.jpg");
+			bgFlag = 1;
+			firstRun = 0;
+		}
 		if (isNorm) drw_setscheme(drw, scm);
 		else drw_setscheme(drw, scm);
 	}
-	else
+	else if (gettime() >= 16 || gettime() <= 7)
 	{
+		if (bgFlag == 1 || firstRun == 1)
+		{
+			system("nitrogen --set-zoom-fill ./Downloads/night.png");
+			bgFlag = 0;
+			firstRun = 0;
+		}
 		if (isNorm) drw_setscheme(drw, scheme[SchemeNightNorm]);
 		else drw_setscheme(drw, scheme[SchemeNightSel]);
 	}
@@ -764,7 +779,7 @@ void
 drawbar(Monitor *m)
 {
 	int x, w, tw = 0;
-	int boxs = drw->fonts->h / 9;
+	/* int boxs = drw->fonts->h / 9; */
 	int boxw = drw->fonts->h / 6 + 2;
 	unsigned int i, occ = 0, urg = 0;
 	char *ts = stext;
@@ -786,7 +801,6 @@ drawbar(Monitor *m)
 	}
 	free(xcape);
 	ts = stext;
-
 	/* draw status first so it can be overdrawn by tags later */
 	if (m == statmon) { /* status is only drawn on user-defined status monitor */
 		schemecycle(drw, scheme[SchemeNorm], 1);
@@ -826,9 +840,9 @@ drawbar(Monitor *m)
 		}
 		drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
 		if (occ & 1 << i)
-			drw_rect(drw, x + boxs, boxs, boxw, boxw,
-				m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
-				urg & 1 << i);
+			drw_rect(drw, x + boxw, 0, w - ( 2 * boxw + 1), boxw,
+			    m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
+			    urg & 1 << i);
 		x += w;
 	}
 	w = blw = TEXTW(m->ltsymbol);
