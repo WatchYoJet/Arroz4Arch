@@ -332,7 +332,7 @@ gettime(void){
 void
 schemecycle(Drw *drw, Clr *scm, int isNorm)
 {
-	if (gettime() >= 7 && gettime() < 14)
+	if (gettime() >= 7 || gettime() < 15)
 	{
 		if (bgFlag == 0 || firstRun == 1)
 		{
@@ -343,7 +343,7 @@ schemecycle(Drw *drw, Clr *scm, int isNorm)
 		if (isNorm) drw_setscheme(drw, scheme[SchemeMornNorm]);
 		else drw_setscheme(drw, scheme[SchemeMornSel]);
 	}
-	else if (gettime() >= 14 || gettime() < 19)
+	else if (gettime() >= 15 && gettime() < 19)
 	{
 		if (bgFlag == 1 || firstRun == 1)
 		{
@@ -804,7 +804,7 @@ void
 drawbar(Monitor *m)
 {
 	int x, w, tw = 0;
-	/* int boxs = drw->fonts->h / 9; */
+	int boxs = drw->fonts->h / 9;
 	int boxw = drw->fonts->h / 6 + 2;
 	unsigned int i, occ = 0, urg = 0;
 	char *ts = stext;
@@ -865,9 +865,9 @@ drawbar(Monitor *m)
 		}
 		drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
 		if (occ & 1 << i)
-			drw_rect(drw, x + boxw, 0, w - ( 2 * boxw + 1), boxw,
-			    m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
-			    urg & 1 << i);
+			drw_rect(drw, x + boxs, boxs, boxw, boxw,
+				m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
+				urg & 1 << i);
 		x += w;
 	}
 	w = blw = TEXTW(m->ltsymbol);
