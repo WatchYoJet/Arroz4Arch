@@ -10,7 +10,7 @@ Still working on it...
 After 7am
 ![POG](./Pics/desktop-morning.png)
 
-Before 2pm
+After 2pm
 ![Nice](./Pics/desktop-sunset.png)
 
 
